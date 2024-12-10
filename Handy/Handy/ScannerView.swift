@@ -8,108 +8,79 @@
 import SwiftUI
 import AVFoundation
 import Vision
+import ARKit
+import RealityKit
 
-struct ScannerView: UIViewControllerRepresentable {
+struct ScannerView: UIViewRepresentable {
     @Binding var handPoseInfo: String
     @Binding var handPoints: [CGPoint]
     @Binding var allPointsDetected: Bool
     @Binding var handPosition3D: SIMD3<Float> // Coordinate 3D calcolate
 
-    let captureSession = AVCaptureSession()
+    var arView: ARView // Passa l'ARView esistente
 
-    func makeUIViewController(context: Context) -> UIViewController {
-        let viewController = UIViewController()
-        
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video),
-              let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice),
-              captureSession.canAddInput(videoInput) else {
-            return viewController
-        }
-        
-        captureSession.addInput(videoInput)
-        
-        let videoOutput = AVCaptureVideoDataOutput()
-        if captureSession.canAddOutput(videoOutput) {
-            videoOutput.setSampleBufferDelegate(context.coordinator, queue: DispatchQueue(label: "videoQueue"))
-            captureSession.addOutput(videoOutput)
-        }
-        
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = viewController.view.bounds
-        previewLayer.videoGravity = .resizeAspectFill
-        viewController.view.layer.addSublayer(previewLayer)
-        
-        Task {
-            captureSession.startRunning()
-        }
-        
-        return viewController
+    func makeUIView(context: Context) -> UIView {
+        // Avvia il tracciamento della mano
+        context.coordinator.startTracking(arView: arView)
+        return UIView() // Nessun contenuto visivo, solo tracciamento
     }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-    
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+    class Coordinator: NSObject, ARSessionDelegate {
         var parent: ScannerView
+        var handPoseRequest = VNDetectHumanHandPoseRequest()
+        let handTrackingQueue = DispatchQueue(label: "handTrackingQueue")
 
         init(_ parent: ScannerView) {
             self.parent = parent
         }
 
-        func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-            self.detectHandPose(in: pixelBuffer)
+        func startTracking(arView: ARView) {
+            arView.session.delegate = self
         }
 
-        func detectHandPose(in pixelBuffer: CVPixelBuffer) {
-            let request = VNDetectHumanHandPoseRequest { (request, error) in
-                guard let observations = request.results as? [VNHumanHandPoseObservation], !observations.isEmpty else {
-                    DispatchQueue.main.async {
-                        self.parent.handPoseInfo = "No hand detected"
-                        self.parent.handPoints = []
-                        self.parent.allPointsDetected = false
-                        self.parent.handPosition3D = SIMD3(0, 0, 0)
-                    }
-                    return
-                }
-                
-                if let observation = observations.first {
-                    var points: [CGPoint] = []
-                    let handJoints: [VNHumanHandPoseObservation.JointName] = [
-                        .wrist, .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
-                    ]
-                    
-                    for joint in handJoints {
-                        if let recognizedPoint = try? observation.recognizedPoint(joint), recognizedPoint.confidence > 0.5 {
-                            points.append(recognizedPoint.location)
+        // Delegate ARSession per aggiornare il tracciamento della mano
+        func session(_ session: ARSession, didUpdate frame: ARFrame) {
+            handTrackingQueue.async {
+                let pixelBuffer = frame.capturedImage
+                let requestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .right, options: [:])
+
+                do {
+                    try requestHandler.perform([self.handPoseRequest])
+                    if let observation = self.handPoseRequest.results?.first {
+                        var points: [CGPoint] = []
+                        let handJoints: [VNHumanHandPoseObservation.JointName] = [
+                            .wrist, .thumbTip, .indexTip, .middleTip, .ringTip, .littleTip
+                        ]
+
+                        for joint in handJoints {
+                            if let recognizedPoint = try? observation.recognizedPoint(joint), recognizedPoint.confidence > 0.5 {
+                                points.append(recognizedPoint.location)
+                            }
+                        }
+
+                        DispatchQueue.main.async {
+                            self.parent.handPoints = points.map { self.convertVisionPoint($0) }
+                            self.parent.handPoseInfo = "Hand detected with \(points.count) points"
+                            self.parent.allPointsDetected = points.count == handJoints.count
+
+                            if let hand3D = self.estimateHand3DPosition(from: self.parent.handPoints) {
+                                self.parent.handPosition3D = hand3D
+                            }
                         }
                     }
-                    
-                    DispatchQueue.main.async {
-                        self.parent.handPoints = points.map { self.convertVisionPoint($0) }
-                        self.parent.handPoseInfo = "Hand detected with \(points.count) points"
-                        self.parent.allPointsDetected = points.count == handJoints.count
-
-                        if let hand3D = self.estimateHand3DPosition(from: self.parent.handPoints) {
-                            self.parent.handPosition3D = hand3D
-                        }
-                    }
+                } catch {
+                    print("Hand pose detection failed: \(error)")
                 }
-            }
-
-            request.maximumHandCount = 1
-
-            let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:])
-            do {
-                try handler.perform([request])
-            } catch {
-                print("Hand pose detection failed: \(error)")
             }
         }
 
+        // Converti i punti Vision nelle coordinate dello schermo
         func convertVisionPoint(_ point: CGPoint) -> CGPoint {
             let screenSize = UIScreen.main.bounds.size
             let y = point.x * screenSize.height
@@ -117,6 +88,7 @@ struct ScannerView: UIViewControllerRepresentable {
             return CGPoint(x: x, y: y)
         }
 
+        // Stima le coordinate 3D della mano (X, Y, Z)
         func estimateHand3DPosition(from handPoints: [CGPoint]) -> SIMD3<Float>? {
             guard let wrist = handPoints.first else { return nil }
             let x = Float(wrist.x / UIScreen.main.bounds.width) * 2 - 1
