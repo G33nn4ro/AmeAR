@@ -29,7 +29,8 @@ struct ContentView: View {
             ARViewContainer(
                 arView: arView,
                 modelName: "handModel",
-                handPosition: $handPosition3D
+                handPosition: $handPosition3D,
+                allPointsDetected: $allPointsDetected
             )
             .edgesIgnoringSafeArea(.all)
         }

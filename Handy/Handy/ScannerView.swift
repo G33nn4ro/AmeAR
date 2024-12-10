@@ -67,12 +67,12 @@ struct ScannerView: UIViewRepresentable {
                         DispatchQueue.main.async {
                             self.parent.handPoints = points.map { self.convertVisionPoint($0) }
                             self.parent.handPoseInfo = "Hand detected with \(points.count) points"
-                            self.parent.allPointsDetected = points.count == handJoints.count
-
+                            self.parent.allPointsDetected = points.count == 6 // Assicurati che siano rilevati tutti i punti
                             if let hand3D = self.estimateHand3DPosition(from: self.parent.handPoints) {
                                 self.parent.handPosition3D = hand3D
                             }
                         }
+
                     }
                 } catch {
                     print("Hand pose detection failed: \(error)")

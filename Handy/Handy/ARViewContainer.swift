@@ -13,6 +13,7 @@ struct ARViewContainer: UIViewRepresentable {
     var arView: ARView
     var modelName: String
     @Binding var handPosition: SIMD3<Float>
+    @Binding var allPointsDetected: Bool // Aggiunto per verificare la rilevazione della mano
 
     func makeUIView(context: Context) -> ARView {
         let config = ARWorldTrackingConfiguration()
@@ -20,20 +21,35 @@ struct ARViewContainer: UIViewRepresentable {
         config.environmentTexturing = .automatic
         arView.session.run(config)
         
+        // Aggiungi un'ancora vuota
         let anchor = AnchorEntity(world: .zero)
-        let modelEntity = try? Entity.loadModel(named: modelName)
-        if let modelEntity = modelEntity {
-            anchor.addChild(modelEntity)
-        }
         arView.scene.addAnchor(anchor)
-        
         context.coordinator.anchorEntity = anchor
-        context.coordinator.modelEntity = modelEntity
+        
         return arView
     }
 
     func updateUIView(_ uiView: ARView, context: Context) {
-        context.coordinator.updateModelPosition(to: handPosition)
+        if allPointsDetected {
+            // Se la mano è rilevata, aggiungi il modello alla posizione
+            if context.coordinator.modelEntity == nil {
+                do {
+                    let modelEntity = try Entity.loadModel(named: modelName)
+                    modelEntity.scale = SIMD3<Float>(0.01, 0.01, 0.01) // Scala del modello
+                    context.coordinator.modelEntity = modelEntity
+                    context.coordinator.anchorEntity?.addChild(modelEntity)
+                } catch {
+                    print("Error loading model: \(error.localizedDescription)")
+                }
+            }
+            context.coordinator.anchorEntity?.position = handPosition
+        } else {
+            // Se la mano non è rilevata, rimuovi il modello
+            if let modelEntity = context.coordinator.modelEntity {
+                context.coordinator.anchorEntity?.removeChild(modelEntity)
+                context.coordinator.modelEntity = nil
+            }
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -43,9 +59,5 @@ struct ARViewContainer: UIViewRepresentable {
     class Coordinator {
         var anchorEntity: AnchorEntity?
         var modelEntity: Entity?
-
-        func updateModelPosition(to position: SIMD3<Float>) {
-            anchorEntity?.position = position
-        }
     }
 }
