@@ -21,8 +21,16 @@ struct ARViewContainer: UIViewRepresentable {
         config.environmentTexturing = .automatic
         arView.session.run(config)
         
-        // Aggiungi un'ancora vuota
-        let anchor = AnchorEntity(world: .zero)
+//        // Crea un'ancora con la posizione iniziale basata su `handPosition`
+//        let anchor = AnchorEntity(world: handPosition)
+//        arView.scene.addAnchor(anchor)
+//        context.coordinator.anchorEntity = anchor
+
+        
+        
+        
+//       Aggiungi un'ancora vuota
+        let anchor = AnchorEntity(world: handPosition)
         arView.scene.addAnchor(anchor)
         context.coordinator.anchorEntity = anchor
         
@@ -35,7 +43,7 @@ struct ARViewContainer: UIViewRepresentable {
             if context.coordinator.modelEntity == nil {
                 do {
                     let modelEntity = try Entity.loadModel(named: modelName)
-                    modelEntity.scale = SIMD3<Float>(0.01, 0.01, 0.01) // Scala del modello
+                    modelEntity.scale = SIMD3<Float>(0.04, 0.04, 0.04) // Scala del modello
                     context.coordinator.modelEntity = modelEntity
                     context.coordinator.anchorEntity?.addChild(modelEntity)
                 } catch {

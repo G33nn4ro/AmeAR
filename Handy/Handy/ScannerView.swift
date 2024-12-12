@@ -91,8 +91,8 @@ struct ScannerView: UIViewRepresentable {
         // Stima le coordinate 3D della mano (X, Y, Z)
         func estimateHand3DPosition(from handPoints: [CGPoint]) -> SIMD3<Float>? {
             guard let wrist = handPoints.first else { return nil }
-            let x = Float(wrist.x / UIScreen.main.bounds.width) * 2 - 1
-            let y = Float(wrist.y / UIScreen.main.bounds.height) * 2 - 1
+            let x = Float(wrist.y / UIScreen.main.bounds.width) * 2 - 1
+            let y = Float(wrist.x / UIScreen.main.bounds.height) * 2 - 1
             let z = Float(-0.5) // Profondità fissa (può essere migliorata)
             return SIMD3(x, y, z)
         }
