@@ -22,18 +22,18 @@ struct ARViewContainer: UIViewRepresentable {
         arView.session.run(config)
         
 //        // Crea un'ancora con la posizione iniziale basata su `handPosition`
-//        let anchor = AnchorEntity(world: handPosition)
-//        arView.scene.addAnchor(anchor)
-//        context.coordinator.anchorEntity = anchor
+        let anchor = AnchorEntity(world: handPosition)
+        arView.scene.addAnchor(anchor)
+        context.coordinator.anchorEntity = anchor
 
         
         
         
 //       Aggiungi un'ancora vuota
-        let anchor = AnchorEntity(world: handPosition)
-        arView.scene.addAnchor(anchor)
-        context.coordinator.anchorEntity = anchor
-        
+//        let anchor = AnchorEntity(world: .zero)
+//        arView.scene.addAnchor(anchor)
+//        context.coordinator.anchorEntity = anchor
+//        
         return arView
     }
 
