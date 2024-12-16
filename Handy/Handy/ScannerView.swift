@@ -93,7 +93,7 @@ struct ScannerView: UIViewRepresentable {
             guard let wrist = handPoints.first else { return nil }
             let x = Float(wrist.y / UIScreen.main.bounds.width) * 2 - 1
             let y = Float(wrist.x / UIScreen.main.bounds.height) * 2 - 1
-            let z = Float(-0.5) // Profondità fissa (può essere migliorata)
+            let z = Float(-1.0) // Profondità fissa (può essere migliorata)
             return SIMD3(x, y, z)
         }
     }
