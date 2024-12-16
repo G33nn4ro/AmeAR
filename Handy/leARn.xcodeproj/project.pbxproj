@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		B323A9012D08CBFE00C75869 /* Handy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Handy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B323A9012D08CBFE00C75869 /* leARn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = leARn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,7 +40,7 @@
 		B323A9022D08CBFE00C75869 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B323A9012D08CBFE00C75869 /* Handy.app */,
+				B323A9012D08CBFE00C75869 /* leARn.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B323A9002D08CBFE00C75869 /* Handy */ = {
+		B323A9002D08CBFE00C75869 /* leARn */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B323A90F2D08CBFE00C75869 /* Build configuration list for PBXNativeTarget "Handy" */;
+			buildConfigurationList = B323A90F2D08CBFE00C75869 /* Build configuration list for PBXNativeTarget "leARn" */;
 			buildPhases = (
 				B323A8FD2D08CBFE00C75869 /* Sources */,
 				B323A8FE2D08CBFE00C75869 /* Frameworks */,
@@ -63,11 +63,11 @@
 			fileSystemSynchronizedGroups = (
 				B323A9032D08CBFE00C75869 /* Handy */,
 			);
-			name = Handy;
+			name = leARn;
 			packageProductDependencies = (
 			);
 			productName = Handy;
-			productReference = B323A9012D08CBFE00C75869 /* Handy.app */;
+			productReference = B323A9012D08CBFE00C75869 /* leARn.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B323A9002D08CBFE00C75869 /* Handy */,
+				B323A9002D08CBFE00C75869 /* leARn */,
 			);
 		};
 /* End PBXProject section */
@@ -316,7 +316,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B323A90F2D08CBFE00C75869 /* Build configuration list for PBXNativeTarget "Handy" */ = {
+		B323A90F2D08CBFE00C75869 /* Build configuration list for PBXNativeTarget "leARn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B323A9102D08CBFE00C75869 /* Debug */,
