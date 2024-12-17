@@ -74,6 +74,7 @@ struct LearnView: View {
                 
                 
                 
+                
                 Spacer()
             }
             .navigationTitle("leARn")

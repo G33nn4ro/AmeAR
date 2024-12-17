@@ -17,7 +17,10 @@ struct VirtualView: View {
                 // Caricamento del modello 3D
                 if let modelEntity = try? await ModelEntity(named: "handModel") {
                     // Aumenta le dimensioni del modello (scala)
-                    modelEntity.transform.scale = SIMD3<Float>(1.5, 1.5, 1.5) // Scala doppia
+                    modelEntity.transform.scale = SIMD3<Float>(0.07, 0.07, 0.07) // Scala doppia
+                    
+                    modelEntity.transform.translation = SIMD3<Float>(0.0, -0.6, 0.0) // Sposta verso il basso
+
                     
                     // Aggiungi il modello alla scena
                     content.add(modelEntity)
