@@ -40,7 +40,7 @@ struct LearnView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15)
                                 .fill(Color.blue)
-                                .frame(width: 370, height: 250)
+                                .frame(width: 370, height: 450)
                                 .shadow(radius: 5)
                                 .overlay(Image("AirPlaneAR")
                                     .resizable()
@@ -61,19 +61,7 @@ struct LearnView: View {
                                             )
                                         )
                                         .frame(height: 70)
-                                        .overlay(
-                                            
-                                            HStack {
-                                                Text("Scopri funzione 1")
-                                                    .font(.title2)
-                                                    .fontWeight(.bold)
-                                                    .foregroundColor(.white)
-                                                    .padding(.horizontal)
-                                                
-                                                Spacer()
-                                            }
-                                            
-                                        )
+                                        
                                 }
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                                 .accessibilityLabel(Text("Press the button to execute an action"))
