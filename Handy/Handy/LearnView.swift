@@ -10,19 +10,18 @@ import SwiftUI
 struct LearnView: View {
     var body: some View {
         NavigationView {
-            
             ScrollView {
-                
                 VStack(spacing: 20) {
                     
                     NavigationLink(destination: FoundamentalView()) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15)
-                                .fill(Color(.blue))            .frame(width: 370, height: 100)
+                                .fill(Color.blue)
+                                .frame(width: 370, height: 100)
                                 .shadow(radius: 5)
                             
                             HStack {
-                                Text("Discover foundamental concepts of Augmented Reality")
+                                Text("Discover fundamental concepts of Augmented Reality")
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
@@ -34,28 +33,55 @@ struct LearnView: View {
                         }
                     }
                     
-                   
-                    // Frame ARView al centro della schermata
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.gray.opacity(0.2)) // Sfondo leggero
-                            .shadow(radius: 5)
-
-                        VirtualView() // Integra ARPreView
+                    // Pulsante rappresentato da un'immagine con un rettangolo arrotondato e testo
+                    NavigationLink(destination: VirtualView()) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color.blue)
+                                .frame(width: 370, height: 400)
+                                .shadow(radius: 5)
+                                .overlay(
+                                    Image("VirtualView")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                            
+                            VStack {
+                                Spacer()
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color.black.opacity(0.8), Color.clear]),
+                                            startPoint: .bottom,
+                                            endPoint: .top
+                                        )
+                                    )
+                                    .frame(height: 70)
+                                    .overlay(
+                                        HStack {
+                                            Text("Discover how to use gesture in AR")
+                                                .font(.title2)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.white)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                    )
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                        }
                     }
-                    .frame(width: 370, height: 400) // Dimensione del frame
-                    .cornerRadius(12)
                     
-
-                    
-                    
+                   
 
                     
                     // Pulsante che apre una pagina web
                     Link(destination: URL(string: "https://www.createwithswift.com/tag/realitykit/")!) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15)
-                                .fill(Color(.blue))            .frame(width: 370, height: 100)
+                                .fill(Color.blue)
+                                .frame(width: 370, height: 100)
                                 .shadow(radius: 5)
                             
                             HStack {
@@ -71,21 +97,11 @@ struct LearnView: View {
                     }
                 }
                 .padding()
-                
-                
-                
-                
-                Spacer()
             }
-            .navigationTitle("leARn")
-            
-            
+            .navigationTitle("leARn") // Spostato qui
         }
-        
     }
 }
-
-
 
 #Preview {
     LearnView()

@@ -33,7 +33,7 @@ struct ARViewContainer: UIViewRepresentable {
             if context.coordinator.modelEntity == nil {
                 do {
                     let modelEntity = try Entity.loadModel(named: modelName)
-                    modelEntity.scale = SIMD3<Float>(0.04, 0.04, 0.04)
+                    modelEntity.scale = SIMD3<Float>(0.02, 0.02, 0.02)
                     context.coordinator.modelEntity = modelEntity
                     context.coordinator.anchorEntity?.addChild(modelEntity)
 
@@ -45,7 +45,7 @@ struct ARViewContainer: UIViewRepresentable {
             }
 
             // Sposta l'aereo di 30 centimetri in avanti
-            let offset: SIMD3<Float> = SIMD3(0, 0, -0.3)
+            let offset: SIMD3<Float> = SIMD3(-1.0, 0, -0.3)
             context.coordinator.anchorEntity?.position = handPosition + offset
 
         } else {

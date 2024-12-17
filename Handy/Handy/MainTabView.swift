@@ -9,6 +9,9 @@ import SwiftUI
 
 struct MainTabView: View {
     var body: some View {
+        NavigationStack {
+            
+       
         TabView {
             LearnView()
                 .tabItem {
@@ -21,6 +24,7 @@ struct MainTabView: View {
                     Image(systemName: "cube.transparent")
                     Text("AR")
                 }
+        }
         }
     }
 }

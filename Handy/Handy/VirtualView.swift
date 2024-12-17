@@ -1,5 +1,5 @@
 //
-//  ARViewContainer2.swift
+//  VirtualView.swift
 //  leARn
 //
 //  Created by Gennaro Liguori on 17/12/24.
@@ -30,6 +30,7 @@ struct VirtualView: View {
                 }
             }
         }
+        
     }
     
     /// Funzione per avviare le animazioni di un modello
