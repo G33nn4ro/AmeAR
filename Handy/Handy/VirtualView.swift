@@ -48,7 +48,7 @@ struct VirtualView: View {
             Button(action: {
                 toggleAnimation()
             }) {
-                Text(isAnimationPlaying ? "Ferma Animazione" : "Avvia Animazione")
+                Text(isAnimationPlaying ? "Stop Animation" : "Start Animation")
                     .frame(width: 200, height: 44)
                     .background(Color.blue)
                     .foregroundColor(.white)
