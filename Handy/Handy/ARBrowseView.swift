@@ -95,10 +95,11 @@ struct ARBrowseView: View {
                                         .overlay(
                                             
                                             HStack {
-                                                Text("Scopri funzione 2")
+                                                Text("Hand Tracking and AR Integration")
                                                     .font(.title2)
                                                     .fontWeight(.bold)
                                                     .foregroundColor(.white)
+                                                    .multilineTextAlignment(.leading)
                                                     .padding(.horizontal)
                                                 
                                                 Spacer()
